@@ -1,6 +1,37 @@
-# STUDIO FONT MANAGER 🔤
+<p align="center">
+  <img src="logo.png" width="130" height="130" alt="Studio Font Manager Logo" style="border-radius: 26px; box-shadow: 0 8px 24px rgba(0,0,0,0.25);" />
+</p>
 
-Phần mềm chuyên dụng quản lý, xem trước hàng loạt và xuất bảng mẫu phông chữ (Font Catalogue) chuẩn độ phân giải cao (300 - 500 DPI) dành cho Studio ảnh viện, in ấn, thiết kế đồ họa.
+<h1 align="center">STUDIO FONT MANAGER</h1>
+
+<p align="center">
+  <b>Phần mềm chuyên dụng quản lý, xem trước hàng loạt và xuất bảng mẫu phông chữ (Font Catalogue) chuẩn độ nét cao 300 - 500 DPI</b><br>
+  <i>Dành cho Studio ảnh viện áo cưới, in ấn thiệp, bảng hiệu, thiết kế đồ họa chuyên nghiệp.</i>
+</p>
+
+<p align="center">
+  <a href="https://github.com/hoangdiep99/Studio-Font-Manager/releases/latest">
+    <img src="https://img.shields.io/github/v/release/hoangdiep99/Studio-Font-Manager?color=be123c&label=Phi%C3%AAn%20b%E1%BA%A3n%20m%E1%BB%9Bi%20nh%E1%BA%A5t&logo=windows" alt="Latest Release" />
+  </a>
+  <a href="https://github.com/hoangdiep99/Studio-Font-Manager/releases">
+    <img src="https://img.shields.io/github/downloads/hoangdiep99/Studio-Font-Manager/total?color=059669&label=L%C6%B0%E1%BB%A3t%20t%E1%BA%A3i&logo=github" alt="Total Downloads" />
+  </a>
+  <img src="https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue?logo=windows" alt="Platform" />
+  <img src="https://img.shields.io/badge/DPI-300%20--%20500%20DPI-gold" alt="DPI" />
+</p>
+
+---
+
+## 📥 Tải Về & Cài Đặt Nhanh
+
+Bạn có thể tải ngay bản cài đặt sẵn chạy trực tiếp không cần cấu hình:
+
+| Phiên bản | Link tải trực tiếp | Bộ đếm lượt tải |
+| :--- | :--- | :--- |
+| **Bản chạy trực tiếp (`.exe`)** | [👉 **Tải StudioFontManager.exe**](https://github.com/hoangdiep99/Studio-Font-Manager/releases/latest/download/StudioFontManager.exe) | ![Downloads](https://img.shields.io/github/downloads/hoangdiep99/Studio-Font-Manager/latest/StudioFontManager.exe?color=be123c&label=T%E1%BA%A3i%20.exe) |
+| **Bản file nén (`.zip`)** | [👉 **Tải StudioFontManager-v1.3-Windows.zip**](https://github.com/hoangdiep99/Studio-Font-Manager/releases/latest/download/StudioFontManager-v1.3-Windows.zip) | ![Downloads](https://img.shields.io/github/downloads/hoangdiep99/Studio-Font-Manager/latest/StudioFontManager-v1.3-Windows.zip?color=059669&label=T%E1%BA%A3i%20.zip) |
+
+> 💡 **Hướng dẫn chạy:** Tải về máy và nháy đúp vào `StudioFontManager.exe` là mở ngay giao diện phần mềm! *(Yêu cầu máy tính đã cài đặt [Node.js](https://nodejs.org/))*.
 
 ---
 
@@ -31,29 +62,13 @@ Phần mềm chuyên dụng quản lý, xem trước hàng loạt và xuất b�
 
 ---
 
-## 🚀 Cài Đặt & Khởi Chạy
-
-### Yêu cầu hệ thống:
-- Hệ điều hành: **Windows 10 / 11**
-- Đã cài đặt **Node.js** (khuyến nghị v18 trở lên)
-
-### Khởi chạy:
-1. Tải repository về máy.
-2. Nháy đúp vào file **`StudioFontManager.exe`** để mở ứng dụng chạy độc lập (giao diện Native Desktop gọn gàng, có icon dưới khay hệ thống Tray Icon).
-3. Hoặc chạy lệnh thông qua terminal:
-   ```bash
-   node server.js
-   ```
-   Sau đó mở trình duyệt truy cập: `http://localhost:3456`
-
----
-
 ## 🛠️ Cấu Trúc Dự Án
 
 ```
 Studio-Font-Manager/
 ├── public/
-│   └── index.html          # Giao diện chính, canvas render bảng mẫu & preview font
+│   ├── index.html          # Giao diện chính, canvas render bảng mẫu & preview font
+│   └── logo.png            # Logo đồ họa thương hiệu Studio Font Manager
 ├── data/
 │   └── metadata.json       # Lưu cấu hình, danh sách yêu thích, thẻ font, lịch sử xem
 ├── fonts/                  # Thư mục chứa các font riêng của studio (.ttf, .otf)
@@ -62,7 +77,8 @@ Studio-Font-Manager/
 ├── StudioFontManager.cs    # Wrapper Desktop C# WinForms
 ├── StudioFontManager.exe   # Ứng dụng Desktop chạy trực tiếp
 ├── build-exe.js            # Script đóng gói và biên dịch file .exe
-├── app.ico                 # Icon ứng dụng
+├── logo.png                # Logo độ phân giải cao 512x512
+├── app.ico                 # Icon ứng dụng đa kích thước
 └── README.md               # Tài liệu hướng dẫn sử dụng
 ```
 
