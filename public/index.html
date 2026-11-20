@@ -520,6 +520,10 @@
       </div>
     </div>
     <div class="header-actions">
+      <div style="position: relative; display: flex; align-items: center;">
+        <input type="text" id="headerSearchFontInput" placeholder="🔍 Tìm font nhanh..." style="padding: 7px 28px 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.18); color: #fff; font-size: 13px; width: 190px; outline: none; transition: all 0.2s;" oninput="syncSearchInputs(this.value)" onfocus="this.style.background='rgba(255,255,255,0.28)'; this.style.borderColor='#fff';" onblur="if(!this.value) { this.style.background='rgba(255,255,255,0.18)'; this.style.borderColor='rgba(255,255,255,0.4)'; }" />
+        <span id="clearHeaderSearchBtn" style="position: absolute; right: 8px; color: #fff; opacity: 0.7; cursor: pointer; display: none; font-size: 14px;" onclick="syncSearchInputs('')" title="Xóa tìm kiếm">✕</span>
+      </div>
       <button class="btn btn-white" style="background: rgba(255,255,255,0.25); border-color: #fff;" onclick="pickAndInstallFontsFromDisk()" title="Mở cửa sổ chọn file nén .ZIP hoặc file Font (.ttf, .otf) để cài thẳng vào máy">
         ⬇️ Cài Font (.ZIP / File)
       </button>
@@ -598,7 +602,10 @@
       </div>
 
       <div class="toggle-group">
-        <input type="text" id="searchFontInput" placeholder="🔍 Tìm tên font (VD: 1FTV, SVN, MTD...)" style="padding: 6px 11px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; width: 230px;" oninput="renderFonts()" />
+        <div style="position: relative; display: flex; align-items: center;">
+          <input type="text" id="searchFontInput" placeholder="🔍 Tìm tên font (VD: 1FTV, SVN, MTD...)" style="padding: 7px 28px 7px 11px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; width: 250px; outline: none; transition: border-color 0.15s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='#cbd5e1'" oninput="syncSearchInputs(this.value)" />
+          <span id="clearMainSearchBtn" style="position: absolute; right: 8px; color: #94a3b8; cursor: pointer; display: none; font-size: 14px;" onclick="syncSearchInputs('')" title="Xóa tìm kiếm">✕</span>
+        </div>
 
         <label class="toggle-label" title="Tự động ẩn các font bị lỗi dấu tiếng Việt (như .Vn cũ hoặc font tiếng Anh không có dấu)">
           <input type="checkbox" id="chkOnlyVN" checked onchange="toggleSetting('onlyVietnameseUnicode', this.checked)" />
@@ -928,6 +935,18 @@
         return convertUnicodeToTCVN3(rawMain);
       }
       return rawMain;
+    }
+
+    function syncSearchInputs(val) {
+      const mainInp = document.getElementById('searchFontInput');
+      const headerInp = document.getElementById('headerSearchFontInput');
+      const clearMain = document.getElementById('clearMainSearchBtn');
+      const clearHeader = document.getElementById('clearHeaderSearchBtn');
+      if (mainInp && mainInp.value !== val) mainInp.value = val;
+      if (headerInp && headerInp.value !== val) headerInp.value = val;
+      if (clearMain) clearMain.style.display = val ? 'inline' : 'none';
+      if (clearHeader) clearHeader.style.display = val ? 'inline' : 'none';
+      renderFonts();
     }
 
     function renderFonts() {

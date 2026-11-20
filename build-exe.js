@@ -202,6 +202,15 @@ namespace StudioFontManager
                 {
                     ExtractResource("index.html", indexPath);
                 }
+
+                string dataDir = Path.Combine(BaseDir, "data");
+                if (!Directory.Exists(dataDir)) Directory.CreateDirectory(dataDir);
+
+                string metaPath = Path.Combine(dataDir, "metadata.json");
+                if (!File.Exists(metaPath))
+                {
+                    ExtractResource("metadata.json", metaPath);
+                }
             }
             catch { }
         }
@@ -357,7 +366,7 @@ fs.writeFileSync(CS_PATH, '\uFEFF' + csCode, 'utf8');
 console.log('Created StudioFontManager.cs');
 
 const cscPath = 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe';
-const cmd = `"${cscPath}" /nologo /target:winexe /optimize+ /out:"${EXE_PATH}" /win32icon:"${ICO_PATH}" /resource:"${path.join(APP_DIR, 'server.js')}",server.js /resource:"${path.join(APP_DIR, 'public', 'index.html')}",index.html /reference:System.dll /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "${CS_PATH}"`;
+const cmd = `"${cscPath}" /nologo /target:winexe /optimize+ /out:"${EXE_PATH}" /win32icon:"${ICO_PATH}" /resource:"${path.join(APP_DIR, 'server.js')}",server.js /resource:"${path.join(APP_DIR, 'public', 'index.html')}",index.html /resource:"${path.join(APP_DIR, 'data', 'metadata.json')}",metadata.json /reference:System.dll /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "${CS_PATH}"`;
 
 console.log('Compiling StudioFontManager.exe...');
 const output = execSync(cmd, { encoding: 'utf8' });

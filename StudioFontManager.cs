@@ -114,6 +114,15 @@ namespace StudioFontManager
                 {
                     ExtractResource("index.html", indexPath);
                 }
+
+                string dataDir = Path.Combine(BaseDir, "data");
+                if (!Directory.Exists(dataDir)) Directory.CreateDirectory(dataDir);
+
+                string metaPath = Path.Combine(dataDir, "metadata.json");
+                if (!File.Exists(metaPath))
+                {
+                    ExtractResource("metadata.json", metaPath);
+                }
             }
             catch { }
         }
