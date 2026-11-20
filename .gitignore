@@ -1,0 +1,12 @@
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Trash / temporary backup fonts
+trash_fonts/*
+!trash_fonts/.gitkeep
+
+# System files
+Thumbs.db
+[Ee]xplorer.exe
+Desktop.ini

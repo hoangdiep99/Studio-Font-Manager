@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STUDIO FONT MANAGER</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #be123c;
+      --primary-hover: #9f1239;
+      --primary-light: #ffe4e6;
+      --gold: #d97706;
+      --gold-light: #fef3c7;
+      --success: #059669;
+      --success-light: #d1fae5;
+      --danger: #dc2626;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #881337 0%, #be123c 100%);
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-title h1 {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .header-title p {
+      font-size: 12.5px;
+      opacity: 0.9;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-white {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border-color: rgba(255,255,255,0.3);
+    }
+    .btn-white:hover { background: rgba(255,255,255,0.28); }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-success {
+      background: #059669;
+      color: #fff;
+    }
+    .btn-success:hover { background: #047857; }
+    .btn-outline {
+      background: #fff;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-outline:hover { background: #f1f5f9; }
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+
+    /* Sticky Control Bar */
+    .control-panel {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .input-group label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .main-text-input {
+      font-size: 18px;
+      font-weight: 600;
+      padding: 9px 14px;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      min-width: 310px;
+      color: #0f172a;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .main-text-input:focus {
+      border-color: var(--primary);
+    }
+    .sub-text-input {
+      font-size: 14px;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      width: 200px;
+      outline: none;
+    }
+    .sub-text-input:focus { border-color: var(--primary); }
+
+    .quick-presets {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .chip:hover { border-color: #94a3b8; background: #f1f5f9; }
+    .chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Filter & Stats Bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+    }
+    .category-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+    .toggle-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #334155;
+      user-select: none;
+    }
+    .toggle-label input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Main Content Container */
+    .main-container {
+      padding: 18px 24px 80px;
+      flex: 1;
+    }
+
+    /* Grid & Table Views */
+    .fonts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 14px;
+    }
+    .fonts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .font-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .font-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    }
+    .font-card.selected-for-export {
+      border-color: var(--primary);
+      background: #fffafb;
+    }
+
+    .fonts-list .font-card {
+      flex-direction: row;
+      align-items: center;
+      padding: 10px 16px;
+    }
+    .fonts-list .card-header {
+      width: 430px;
+      flex-shrink: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .fonts-list .card-meta { width: 100%; flex: none; }
+    .fonts-list .preview-area {
+      flex: 1;
+      min-width: 0;
+      padding: 4px 16px;
+      min-height: auto;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1 1 200px;
+    }
+    .order-badge {
+      background: #0f172a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 12.5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .font-card.selected-for-export .order-badge {
+      background: var(--primary);
+    }
+    .font-name {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: #334155;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+    .font-name:hover { color: var(--primary); text-decoration: underline; }
+
+    .badge {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .badge-vn { background: var(--success-light); color: var(--success); }
+    .badge-warn { background: var(--gold-light); color: #b45309; }
+    .badge-cat { background: #f1f5f9; color: #475569; cursor: pointer; }
+    .badge-cat:hover { background: #e2e8f0; }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+    .icon-btn:hover { background: #f1f5f9; }
+    .icon-btn.fav-active {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      color: #d97706;
+    }
+    .select-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: #f8fafc;
+      user-select: none;
+    }
+    .font-card.selected-for-export .select-check {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Preview Box inside Card */
+    .preview-area {
+      min-height: 88px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px 10px;
+      border-radius: 8px;
+      background: var(--preview-bg, #ffffff);
+      color: var(--preview-color, #111827);
+      overflow: hidden;
+      word-break: break-word;
+    }
+    .preview-main-text {
+      line-height: 1.35;
+      transition: font-size 0.1s;
+    }
+    .preview-sub-text {
+      font-size: 14px;
+      opacity: 0.78;
+      margin-top: 4px;
+      letter-spacing: 1.5px;
+    }
+
+    /* Floating Bottom Bar for Exporting to Zalo */
+    .bottom-export-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #0f172a;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 60;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.18);
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .export-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+    }
+    .export-count-pill {
+      background: var(--primary);
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    /* Modal for Export Preview & Settings */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      max-width: 1050px;
+      width: 100%;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header h2 { font-size: 18px; }
+    .modal-body {
+      padding: 20px 22px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .modal-footer {
+      padding: 14px 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 72px;
+      right: 24px;
+      background: #0f172a;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.2s;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media print {
+      .header, .control-panel, .bottom-export-bar, .card-actions { display: none !important; }
+      .main-container { padding: 0; }
+      .font-card { break-inside: avoid; border: 1px solid #ccc; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-title">
+      <span style="font-size: 28px;">🔤</span>
+      <div>
+        <h1>STUDIO FONT MANAGER</h1>
+        <p id="statsSummary">Đang tải danh sách phông chữ trong máy...</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-white" style="background: rgba(255,255,255,0.25); border-color: #fff;" onclick="pickAndInstallFontsFromDisk()" title="Mở cửa sổ chọn file nén .ZIP hoặc file Font (.ttf, .otf) để cài thẳng vào máy">
+        ⬇️ Cài Font (.ZIP / File)
+      </button>
+      <button class="btn btn-white" onclick="openFolderPicker()" title="Thêm thư mục chứa font (.ttf, .otf) từ máy tính để xem và quản lý">
+        📁 + Thêm Thư Mục Font
+      </button>
+      <input type="file" id="fileUploadInput" multiple accept=".zip,.ttf,.otf" style="display:none" onchange="handleUploadFiles(this.files)" />
+      <button class="btn btn-white" onclick="openSettingsModal()">
+        ⚙️ Nguồn Font & Cài Đặt
+      </button>
+    </div>
+  </header>
+
+  <!-- Sticky Control Bar -->
+  <section class="control-panel">
+    <div class="control-row">
+      <div class="input-group" style="flex: 1; min-width: 280px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label>Nội dung xem trước (Gõ văn bản bất kỳ)</label>
+          <span style="font-size:11px; color:var(--muted);">Tự động nhớ nội dung gần nhất</span>
+        </div>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <input type="text" id="coupleNameInput" list="recentTextsDatalist" class="main-text-input" style="flex:1;" value="Hoàng Điệp & Trịnh Hướng" placeholder="Nhập nội dung văn bản muốn xem thử..." oninput="handleTextChange()" onblur="commitRecentText()" onkeydown="if(event.key==='Enter') commitRecentText()" />
+          <datalist id="recentTextsDatalist"></datalist>
+        </div>
+        <div id="recentTextChips" style="display:flex; gap:5px; flex-wrap:wrap; align-items:center; margin-top:2px;"></div>
+      </div>
+
+      <div class="input-group">
+        <label>Kiểu chữ nhanh</label>
+        <div class="quick-presets">
+          <button id="btnPresetTitle" class="btn btn-outline btn-sm" onclick="transformCoupleText('title')" title="Viết Hoa Chữ Cái Đầu Từ">Hoàng Điệp & Trịnh Hướng</button>
+          <button id="btnPresetUpper" class="btn btn-outline btn-sm" onclick="transformCoupleText('upper')" title="VIẾT IN HOA TOÀN BỘ">HOÀNG ĐIỆP & TRỊNH HƯỚNG</button>
+          <button class="btn btn-outline btn-sm" onclick="swapSeparator(' & ')">Dấu &amp;</button>
+          <button class="btn btn-outline btn-sm" onclick="swapSeparator(' ❤️ ')">Dấu ❤️</button>
+          <button class="btn btn-outline btn-sm" onclick="swapSeparator(' - ')">Dấu -</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Cỡ chữ: <span id="fontSizeVal">38</span>px</label>
+        <input type="range" id="fontSizeSlider" min="22" max="72" value="38" style="width: 110px; accent-color: var(--primary);" oninput="updatePreviewStyle()" />
+      </div>
+
+      <div class="input-group">
+        <label>Màu nền thử</label>
+        <div style="display:flex; gap:5px;">
+          <button class="btn btn-sm" style="background:#ffffff; color:#111; border:1px solid #cbd5e1;" onclick="setTheme('#ffffff', '#111827')">Trắng</button>
+          <button class="btn btn-sm" style="background:#fdf8f5; color:#431407; border:1px solid #e7d8c9;" onclick="setTheme('#fdf8f5', '#431407')">Kem Ấm</button>
+          <button class="btn btn-sm" style="background:#18181b; color:#f4f4f5; border:1px solid #27272a;" onclick="setTheme('#18181b', '#f8fafc')">Đen</button>
+          <button class="btn btn-sm" style="background:#18181b; color:#fbbf24; border:1px solid #27272a;" onclick="setTheme('#18181b', '#fbbf24')">Vàng Gold</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Kiểu xem</label>
+        <div style="display:flex; gap:4px;">
+          <button id="btnViewGrid" class="btn btn-sm btn-primary" onclick="setViewMode('grid')">⊞ Lưới</button>
+          <button id="btnViewList" class="btn btn-sm btn-outline" onclick="setViewMode('list')">☰ Bảng Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter & Category Row -->
+    <div class="filter-bar">
+      <div class="category-tabs" id="categoryTabs">
+        <span class="chip active" data-cat="ALL" onclick="selectCategory('ALL')">Tất cả (<span id="countAll">0</span>)</span>
+        <span class="chip" data-cat="FAV" onclick="selectCategory('FAV')">⭐ Yêu thích (<span id="countFav">0</span>)</span>
+        <span class="chip" data-cat="SELECTED" onclick="selectCategory('SELECTED')">✅ Đã chọn (<span id="countSelected">0</span>)</span>
+        <span class="chip" data-cat="NOT_INSTALLED" onclick="selectCategory('NOT_INSTALLED')" title="Các font nằm ở thư mục ngoài chưa cài vào Windows">📂 Chưa cài (<span id="countNotInstalled">0</span>)</span>
+        <span class="chip" data-cat="Viết tay / Chữ ký" onclick="selectCategory('Viết tay / Chữ ký')">✍️ Viết tay / Chữ ký</span>
+        <span class="chip" data-cat="Sang trọng" onclick="selectCategory('Sang trọng')">👑 Sang trọng (Serif)</span>
+        <span class="chip" data-cat="Hiện đại" onclick="selectCategory('Hiện đại')">✨ Hiện đại (Sans)</span>
+        <span class="chip" data-cat="Nghệ thuật / Khác" onclick="selectCategory('Nghệ thuật / Khác')">🎨 Nghệ thuật / Khác</span>
+        <span class="chip" data-cat="HIDDEN" onclick="selectCategory('HIDDEN')">👁️ Đã ẩn (<span id="countHidden">0</span>)</span>
+      </div>
+
+      <div class="toggle-group">
+        <input type="text" id="searchFontInput" placeholder="🔍 Tìm tên font (VD: 1FTV, SVN, MTD...)" style="padding: 6px 11px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; width: 230px;" oninput="renderFonts()" />
+
+        <label class="toggle-label" title="Tự động ẩn các font bị lỗi dấu tiếng Việt (như .Vn cũ hoặc font tiếng Anh không có dấu)">
+          <input type="checkbox" id="chkOnlyVN" checked onchange="toggleSetting('onlyVietnameseUnicode', this.checked)" />
+          <span>Chỉ hiện Font gõ chuẩn Tiếng Việt Unicode</span>
+        </label>
+
+        <label class="toggle-label" title="Ẩn các font văn phòng mặc định của Windows như Arial, Calibri, Tahoma, Times New Roman...">
+          <input type="checkbox" id="chkHideSystem" checked onchange="toggleSetting('hideSystemFonts', this.checked)" />
+          <span>Ẩn font văn phòng Windows</span>
+        </label>
+
+        <label class="toggle-label" title="Tự động chuyển mã Unicode sang TCVN3 cho các font .Vn cũ để không bị lỗi dấu">
+          <input type="checkbox" id="chkAutoTCVN3" checked onchange="renderFonts()" />
+          <span>Hỗ trợ chuyển mã font .Vn</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Font Cards Area -->
+  <main class="main-container">
+    <div id="fontsContainer" class="fonts-grid"></div>
+  </main>
+
+  <!-- Floating Bottom Bar for Exporting & Managing Fonts -->
+  <div class="bottom-export-bar">
+    <div class="export-info">
+      <span class="export-count-pill"><span id="bottomSelectedCount">0</span> font đã chọn</span>
+      <span style="opacity: 0.85; font-size: 13px;">Quản lý phông chữ chuyên nghiệp: Cài đặt (.ZIP / Thư mục), Xoá, Nén .ZIP hoặc Xuất ảnh bảng mẫu!</span>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+      <button id="btnToggleSelectAll" class="btn btn-white btn-sm" onclick="toggleSelectAllVisible()">☑️ Chọn tất cả</button>
+      <span style="opacity:0.35;">|</span>
+      <button class="btn btn-white btn-sm" onclick="handleInstallButtonClick()" title="Mở cửa sổ chọn file .ZIP / file Font để cài vào Windows (hoặc cài các font chưa cài đang chọn)">
+        ⬇️ Cài Font
+      </button>
+      <button class="btn btn-white btn-sm" onclick="exportSelectedFontsZip()" title="Nén tất cả các file font (.ttf/.otf) đã chọn thành 1 file .ZIP">
+        📦 Xuất Font (.ZIP)
+      </button>
+      <button class="btn btn-white btn-sm" style="border-color: rgba(248,113,113,0.5); color: #fecaca;" onclick="deleteSelectedFonts()" title="Xoá / Gỡ cài đặt các font đã chọn (có lưu bản sao trong Thùng rác)">
+        🗑️ Xoá Font
+      </button>
+      <button class="btn btn-success" onclick="openExportModal()">
+        📸 Xuất Bảng Mẫu Ảnh / PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- Export Catalogue Modal -->
+  <div class="modal-backdrop" id="exportModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>📸 Xuất Bảng Mẫu Phông Chữ (Font Catalogue)</h2>
+        <button class="btn btn-outline btn-sm" onclick="closeExportModal()">✖ Đóng</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; background: #f8fafc; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border);">
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--muted); display:block;">Độ nét (DPI)</label>
+            <select id="exportDpi" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;" onchange="generateExportCanvas()">
+              <option value="150">150 DPI (Nhẹ, xem nhanh)</option>
+              <option value="300" selected>300 DPI (Nét - Khuyên dùng)</option>
+              <option value="400">400 DPI (Rất nét)</option>
+              <option value="500">500 DPI (Siêu nét, file nặng)</option>
+            </select>
+            <div id="exportSizeInfo" style="font-size: 11px; color: var(--muted); margin-top: 3px;"></div>
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--muted); display:block;">Số cột trên ảnh</label>
+            <select id="exportCols" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;" onchange="generateExportCanvas()">
+              <option value="2">2 cột (Rõ, chữ to - Khuyên dùng)</option>
+              <option value="3" selected>3 cột (Vừa đẹp cho 15-45 mẫu)</option>
+              <option value="4">4 cột (Nhiều mẫu trên 1 ảnh)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--muted); display:block;">Hiện tên kỹ thuật của Font?</label>
+            <select id="exportShowFontName" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;" onchange="generateExportCanvas()">
+              <option value="code_and_name">Hiện Mã số (#01) + Tên Font</option>
+              <option value="code_only">Chỉ hiện Mã số (#01, #02...) cho gọn</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--muted); display:block;">Tiêu đề bảng mẫu</label>
+            <input type="text" id="exportTitleInput" value="BẢNG MẪU PHÔNG CHỮ" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #cbd5e1; width: 260px;" oninput="generateExportCanvas()" />
+          </div>
+        </div>
+
+        <div style="text-align: center; background: #e2e8f0; padding: 16px; border-radius: 10px; overflow: auto; max-height: 60vh;">
+          <canvas id="exportCanvas" style="max-width: 100%; height: auto; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border-radius: 6px; background: #fff;"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div style="font-size: 13px; color: var(--muted);">
+          💡 <b>Mẹo nhanh:</b> Bấm <b>"Copy Ảnh vào Clipboard"</b> rồi qua cửa sổ chat Zalo bấm <b>Ctrl + V</b> là gửi được ngay!
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-primary" onclick="copyCanvasToClipboard()">📋 Copy Ảnh vào Clipboard (Dán thẳng Zalo)</button>
+          <button class="btn btn-success" onclick="downloadCanvasAsPng()">💾 Tải File Ảnh PNG Nét Cao</button>
+          <button class="btn btn-outline" onclick="window.print()">🖨️ In / Xuất PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings & Font Sources Modal -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-header">
+        <h2>⚙️ Quản Lý Nguồn Phông Chữ</h2>
+        <button class="btn btn-outline btn-sm" onclick="closeSettingsModal()">✖ Đóng</button>
+      </div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
+        <div style="padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: #f8fafc;">
+          <h3 style="font-size: 15px; margin-bottom: 6px;">1. Font đã cài trong máy Windows</h3>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 10px;">
+            Tự động đọc toàn bộ font bạn đã cài vào Windows (bao gồm 390+ font 1FTV, SVN, MTD, LNTH, MJ...).
+          </p>
+          <label class="toggle-label">
+            <input type="checkbox" id="chkIncludeWinFonts" checked onchange="toggleSetting('includeWindowsFonts', this.checked)" />
+            <span>Quét tất cả Font đã cài trong Windows</span>
+          </label>
+        </div>
+
+        <div style="padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: #f8fafc;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <h3 style="font-size: 15px;">2. Thư mục chứa Font riêng của tiệm</h3>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-outline btn-sm" onclick="openAppFontsFolder()">📂 Mở thư mục ./fonts</button>
+              <button class="btn btn-primary btn-sm" onclick="openFolderPicker()">+ Thêm thư mục bất kỳ</button>
+            </div>
+          </div>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 10px;">
+            Bạn có thể tải các bộ font chưa cài vào máy, để trong một thư mục rồi bấm "+ Thêm thư mục bất kỳ" để nạp vào phần mềm mà không cần cài nặng máy.
+          </p>
+          <div id="customFoldersList" style="display:flex; flex-direction:column; gap:6px; font-size:13px;"></div>
+        </div>
+
+        <div style="padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: #f8fafc; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3 style="font-size: 15px; margin-bottom: 4px;">3. Thùng rác Font đã xoá (./trash_fonts)</h3>
+            <p style="font-size: 12.5px; color: var(--muted);">Khi bạn bấm Xoá font, file gốc luôn được lưu dự phòng tại đây để khôi phục khi cần.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="openTrashFolder()">🗑️ Mở Thùng Rác</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span></span>
+        <button class="btn btn-primary" onclick="closeSettingsModal()">Hoàn tất</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let allFonts = [];
+    let filteredFonts = [];
+    let selectedForExport = new Set();
+    let loadedFontFaces = new Set();
+    let currentCategory = 'ALL';
+    let viewMode = 'grid';
+    let previewBg = '#ffffff';
+    let previewColor = '#111827';
+    let appSettings = {};
+
+    const CATEGORIES = ['Viết tay / Chữ ký', 'Sang trọng', 'Hiện đại', 'Nghệ thuật / Khác'];
+
+    // Bảng mã chuẩn Unicode -> TCVN3 (ABC) để font .Vn hiển thị đúng dấu
+    const TCVN3_MAP = {
+      'à':'µ','ả':'¶','ã':'·','á':'¸','ạ':'¹',
+      'ă':'¨','ằ':'»','ẳ':'¼','ẵ':'½','ắ':'¾','ặ':'Æ',
+      'â':'©','ầ':'Ç','ẩ':'È','ẫ':'É','ấ':'Ê','ậ':'Ë',
+      'đ':'®',
+      'è':'Ì','ẻ':'Î','ẽ':'Ï','é':'Ð','ẹ':'Ñ',
+      'ê':'ª','ề':'Ò','ể':'Ó','ễ':'Ô','ế':'Õ','ệ':'Ö',
+      'ì':'×','ỉ':'Ø','ĩ':'Ü','í':'Ý','ị':'Þ',
+      'ò':'ß','ỏ':'á','õ':'â','ó':'ã','ọ':'ä',
+      'ô':'«','ồ':'å','ổ':'æ','ỗ':'ç','ố':'è','ộ':'é',
+      'ơ':'¬','ờ':'ê','ở':'ë','ỡ':'ì','ớ':'í','ợ':'î',
+      'ù':'ï','ủ':'ñ','ũ':'ò','ú':'ó','ụ':'ô',
+      'ư':'\u00AD','ừ':'õ','ử':'ö','ữ':'÷','ứ':'ø','ự':'ù',
+      'ỳ':'ú','ỷ':'û','ỹ':'ü','ý':'ý','ỵ':'þ'
+    };
+    const TCVN3_UPPER = { 'Ă':'¡','Â':'¢','Ê':'£','Ô':'¤','Ơ':'¥','Ư':'¦','Đ':'§' };
+
+    function convertUnicodeToTCVN3(str) {
+      let out = '';
+      for (const ch of String(str).normalize('NFC')) {
+        if (TCVN3_UPPER[ch]) { out += TCVN3_UPPER[ch]; continue; }
+        if (TCVN3_MAP[ch]) { out += TCVN3_MAP[ch]; continue; }
+        // Chữ hoa có dấu (Á, Ứ...): TCVN3 không có mã riêng -> dùng mã chữ thường (font .VnXxxH tự hiện in hoa)
+        const lower = ch.toLowerCase();
+        if (lower !== ch && TCVN3_MAP[lower]) { out += TCVN3_MAP[lower]; continue; }
+        out += ch;
+      }
+      return out;
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+    }
+
+    let recentTexts = [];
+    let initialTextLoaded = false;
+
+    async function fetchFonts() {
+      const res = await fetch('/api/fonts');
+      const data = await res.json();
+      allFonts = data.fonts || [];
+      appSettings = data.settings || {};
+
+      document.getElementById('chkOnlyVN').checked = !!appSettings.onlyVietnameseUnicode;
+      document.getElementById('chkHideSystem').checked = appSettings.hideSystemFonts !== false;
+      document.getElementById('chkIncludeWinFonts').checked = appSettings.includeWindowsFonts !== false;
+
+      if (!initialTextLoaded) {
+        initialTextLoaded = true;
+        const savedLast = localStorage.getItem('sfm_lastPreviewText') || appSettings.lastPreviewText || 'Hoàng Điệp & Trịnh Hướng';
+        let savedRecents = [];
+        try {
+          savedRecents = JSON.parse(localStorage.getItem('sfm_recentTexts') || 'null') || appSettings.recentTexts || [];
+        } catch (e) {
+          savedRecents = appSettings.recentTexts || [];
+        }
+        recentTexts = Array.isArray(savedRecents) && savedRecents.length > 0
+          ? savedRecents
+          : [savedLast];
+        document.getElementById('coupleNameInput').value = savedLast;
+        renderRecentTextsUI();
+      }
+
+      renderCustomFolders();
+      renderFonts();
+    }
+
+    function renderRecentTextsUI() {
+      const dl = document.getElementById('recentTextsDatalist');
+      if (dl) {
+        dl.innerHTML = recentTexts.map(t => `<option value="${escapeHtml(t)}"></option>`).join('');
+      }
+      const box = document.getElementById('recentTextChips');
+      if (!box) return;
+      if (recentTexts.length === 0) {
+        box.innerHTML = '';
+        return;
+      }
+      box.innerHTML = `<span style="font-size:11px; color:var(--muted); font-weight:600;">🕒 Gần đây:</span>` +
+        recentTexts.slice(0, 6).map((t, idx) => `
+          <span style="display:inline-flex; align-items:center; gap:4px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:999px; padding:1px 8px; font-size:11.5px; color:#334155; cursor:pointer;"
+                title="Bấm để dùng lại nội dung này"
+                onclick="applyRecentText('${escapeJs(t)}')">
+            <span>${escapeHtml(t.length > 24 ? t.slice(0, 24) + '…' : t)}</span>
+            <b style="color:#94a3b8; font-size:11px; padding-left:2px;" title="Xoá khỏi lịch sử" onclick="event.stopPropagation(); removeRecentText(${idx})">×</b>
+          </span>
+        `).join('');
+    }
+
+    function applyRecentText(txt) {
+      const input = document.getElementById('coupleNameInput');
+      input.value = txt;
+      handleTextChange();
+      commitRecentText();
+    }
+
+    function removeRecentText(idx) {
+      recentTexts.splice(idx, 1);
+      saveRecentTextsState(document.getElementById('coupleNameInput').value.trim());
+      renderRecentTextsUI();
+    }
+
+    function commitRecentText() {
+      const val = (document.getElementById('coupleNameInput').value || '').trim();
+      if (!val) return;
+      recentTexts = [val, ...recentTexts.filter(x => x !== val)].slice(0, 12);
+      saveRecentTextsState(val);
+      renderRecentTextsUI();
+    }
+
+    function saveRecentTextsState(lastVal) {
+      try {
+        if (lastVal) localStorage.setItem('sfm_lastPreviewText', lastVal);
+        localStorage.setItem('sfm_recentTexts', JSON.stringify(recentTexts));
+      } catch (e) {}
+      clearTimeout(window._saveTextTimer);
+      window._saveTextTimer = setTimeout(() => {
+        fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            lastPreviewText: lastVal || document.getElementById('coupleNameInput').value,
+            recentTexts
+          })
+        }).catch(() => {});
+      }, 400);
+    }
+
+    // Lazy load @font-face rules using IntersectionObserver so 400+ fonts load smoothly
+    const fontObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const fontId = entry.target.dataset.fontId;
+          if (fontId) ensureFontLoaded(fontId);
+          fontObserver.unobserve(entry.target);
+        }
+      }
+    }, { rootMargin: '300px' });
+
+    function ensureFontLoaded(fontId) {
+      if (loadedFontFaces.has(fontId)) return Promise.resolve();
+      loadedFontFaces.add(fontId);
+      const family = `Font_${fontId}`;
+      const fontFace = new FontFace(family, `url(/api/font-file/${fontId})`);
+      return fontFace.load().then((loaded) => {
+        document.fonts.add(loaded);
+      }).catch(() => {});
+    }
+
+    function getPreviewTextForFont(font) {
+      const rawMain = document.getElementById('coupleNameInput').value || 'Đức Huy & Hà My';
+      const autoTCVN3 = document.getElementById('chkAutoTCVN3').checked;
+      if (autoTCVN3 && font.encoding === 'TCVN3 (.Vn)') {
+        return convertUnicodeToTCVN3(rawMain);
+      }
+      return rawMain;
+    }
+
+    function renderFonts() {
+      const search = (document.getElementById('searchFontInput').value || '').toLowerCase().trim();
+      const onlyVN = document.getElementById('chkOnlyVN').checked;
+      const hideSystem = document.getElementById('chkHideSystem').checked;
+
+      // Update counts
+      const activeBase = allFonts.filter(f => {
+        if (hideSystem && f.isSystemFont) return false;
+        if (onlyVN && !f.isVietnameseUnicode) return false;
+        return true;
+      });
+
+      document.getElementById('countAll').textContent = activeBase.filter(f => !f.hidden).length;
+      document.getElementById('countFav').textContent = allFonts.filter(f => f.favorite && !f.hidden).length;
+      document.getElementById('countSelected').textContent = selectedForExport.size;
+      document.getElementById('countNotInstalled').textContent = allFonts.filter(f => !f.isInstalled && !f.hidden).length;
+      document.getElementById('countHidden').textContent = allFonts.filter(f => f.hidden).length;
+      document.getElementById('bottomSelectedCount').textContent = selectedForExport.size;
+
+      const totalVN = allFonts.filter(f => f.isVietnameseUnicode && !f.isSystemFont).length;
+      document.getElementById('statsSummary').textContent =
+        `Tổng cộng ${allFonts.length} font • ${totalVN} font nghệ thuật Tiếng Việt Unicode`;
+
+      filteredFonts = allFonts.filter(f => {
+        if (currentCategory === 'HIDDEN') {
+          return f.hidden;
+        }
+        if (f.hidden) return false;
+
+        if (currentCategory === 'FAV') {
+          if (!f.favorite) return false;
+        } else if (currentCategory === 'SELECTED') {
+          if (!selectedForExport.has(f.id)) return false;
+        } else if (currentCategory === 'NOT_INSTALLED') {
+          if (f.isInstalled) return false;
+        } else if (currentCategory !== 'ALL') {
+          if (!f.tags || !f.tags.includes(currentCategory)) return false;
+        }
+
+        if (currentCategory !== 'FAV' && currentCategory !== 'SELECTED' && currentCategory !== 'NOT_INSTALLED') {
+          if (hideSystem && f.isSystemFont) return false;
+          if (onlyVN && !f.isVietnameseUnicode) return false;
+        }
+
+        if (search) {
+          const hay = `${f.displayName} ${f.fileName} ${(f.tags || []).join(' ')}`.toLowerCase();
+          if (!hay.includes(search)) return false;
+        }
+        return true;
+      });
+
+      const container = document.getElementById('fontsContainer');
+      container.className = viewMode === 'grid' ? 'fonts-grid' : 'fonts-list';
+      const fontSize = document.getElementById('fontSizeSlider').value;
+      updateSelectAllButtonLabel();
+      syncQuickPresetButtons();
+
+      if (filteredFonts.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: #fff; border-radius: 12px; border: 1px dashed #cbd5e1;">
+            <p style="font-size: 16px; font-weight: 600; color: #334155; margin-bottom: 8px;">Không tìm thấy phông chữ nào khớp bộ lọc hiện tại</p>
+            <p style="font-size: 13.5px; color: #64748b;">Thử tắt bớt bộ lọc hoặc chọn danh mục "Tất cả"</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filteredFonts.map((f, idx) => {
+        const orderCode = `#${String(idx + 1).padStart(2, '0')}`;
+        const isSelected = selectedForExport.has(f.id);
+        const family = `Font_${f.id}`;
+        const mainText = escapeHtml(getPreviewTextForFont(f));
+        const catTag = (f.tags && f.tags[0]) || f.autoCategory || 'Nghệ thuật / Khác';
+        const badgeClass = f.isVietnameseUnicode ? 'badge-vn' : 'badge-warn';
+        const badgeLabel = f.isVietnameseUnicode ? '✓ Tiếng Việt' : f.encoding;
+
+        return `
+          <div class="font-card ${isSelected ? 'selected-for-export' : ''}" data-font-id="${f.id}" id="card_${f.id}">
+            <div class="card-header">
+              <div class="card-meta">
+                <span class="order-badge">${orderCode}</span>
+                <span class="font-name" title="Bấm để copy tên font: ${escapeHtml(f.displayName)} (${escapeHtml(f.fileName)})" onclick="copyFontName('${escapeJs(f.displayName)}')">
+                  ${escapeHtml(f.displayName)}
+                </span>
+              </div>
+              <div class="card-actions">
+                <span class="badge ${badgeClass}" title="Độ phủ dấu Tiếng Việt: ${f.vnCoverage}%">${badgeLabel}</span>
+                <span class="badge badge-cat" title="Bấm để đổi phân loại nhóm font" onclick="cycleCategory('${f.id}')">${escapeHtml(catTag)}</span>
+                ${!f.isInstalled ? `<button class="icon-btn" style="width:auto; padding:0 8px; font-size:11.5px; font-weight:700; color:#059669; border-color:#a7f3d0; background:#ecfdf5;" title="Cài font này vào Windows" onclick="installFonts(['${f.id}'])">⬇️ Cài</button>` : ''}
+                <button class="icon-btn ${f.favorite ? 'fav-active' : ''}" title="Đánh dấu Yêu thích (⭐)" onclick="toggleFavorite('${f.id}')">
+                  ${f.favorite ? '★' : '☆'}
+                </button>
+                <button class="icon-btn" title="${f.hidden ? 'Hiện lại font này' : 'Ẩn tạm font này khỏi danh sách'}" onclick="toggleHidden('${f.id}')">
+                  ${f.hidden ? '↩️' : '👁️'}
+                </button>
+                ${f.canDelete !== false ? `<button class="icon-btn" title="Xoá / Gỡ font này (chuyển vào Thùng rác)" onclick="deleteSingleFont('${f.id}', '${escapeJs(f.displayName)}')">🗑️</button>` : ''}
+                <label class="select-check" title="Bấm để Chọn hoặc Bỏ chọn phông chữ này">
+                  <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelectForExport('${f.id}', this.checked)" style="display:none" />
+                  <span>${isSelected ? '✓ Đã chọn' : '+ Chọn'}</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="preview-area" style="--preview-bg: ${previewBg}; --preview-color: ${previewColor}; cursor: pointer;" title="Bấm vào khung chữ để Chọn / Bỏ chọn nhanh" onclick="toggleCardSelection('${f.id}')">
+              <div class="preview-main-text" style="font-family: '${family}', sans-serif; font-size: ${fontSize}px;">
+                ${mainText}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Observe cards to lazy-load font files
+      document.querySelectorAll('.font-card').forEach(card => {
+        fontObserver.observe(card);
+      });
+    }
+
+    function syncQuickPresetButtons() {
+      const raw = (document.getElementById('coupleNameInput').value || '').trim() || 'Văn Bản Mẫu';
+      const shortRaw = raw.length > 26 ? raw.slice(0, 26) + '…' : raw;
+      const titleCase = shortRaw.toLowerCase().replace(/(^|\s)\S/g, l => l.toUpperCase());
+      const upperCase = shortRaw.toUpperCase();
+      const btnTitle = document.getElementById('btnPresetTitle');
+      const btnUpper = document.getElementById('btnPresetUpper');
+      if (btnTitle) btnTitle.textContent = titleCase;
+      if (btnUpper) btnUpper.textContent = upperCase;
+    }
+
+    function handleTextChange() {
+      syncQuickPresetButtons();
+      const curVal = (document.getElementById('coupleNameInput').value || '').trim();
+      if (curVal) {
+        try { localStorage.setItem('sfm_lastPreviewText', curVal); } catch (e) {}
+        clearTimeout(window._autoCommitTextTimer);
+        window._autoCommitTextTimer = setTimeout(() => commitRecentText(), 1200);
+      }
+      const fontMap = new Map(allFonts.map(f => [f.id, f]));
+      document.querySelectorAll('.font-card').forEach(card => {
+        const f = fontMap.get(card.dataset.fontId);
+        if (!f) return;
+        const mainEl = card.querySelector('.preview-main-text');
+        if (mainEl) mainEl.textContent = getPreviewTextForFont(f);
+      });
+    }
+
+    function updatePreviewStyle() {
+      const size = document.getElementById('fontSizeSlider').value;
+      document.getElementById('fontSizeVal').textContent = size;
+      document.querySelectorAll('.preview-main-text').forEach(el => {
+        el.style.fontSize = size + 'px';
+      });
+    }
+
+    function setTheme(bg, color) {
+      previewBg = bg;
+      previewColor = color;
+      document.querySelectorAll('.preview-area').forEach(el => {
+        el.style.setProperty('--preview-bg', bg);
+        el.style.setProperty('--preview-color', color);
+      });
+    }
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      document.getElementById('btnViewGrid').className = mode === 'grid' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline';
+      document.getElementById('btnViewList').className = mode === 'list' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline';
+      renderFonts();
+    }
+
+    function transformCoupleText(type) {
+      const input = document.getElementById('coupleNameInput');
+      const val = input.value;
+      if (type === 'upper') {
+        input.value = val.toUpperCase();
+      } else if (type === 'title') {
+        input.value = val.toLowerCase().replace(/(^|\s)\S/g, l => l.toUpperCase());
+      }
+      handleTextChange();
+    }
+
+    function swapSeparator(sep) {
+      const input = document.getElementById('coupleNameInput');
+      input.value = input.value.replace(/\s+(&|❤️|-|\+|và|and)\s+/gi, sep);
+      handleTextChange();
+    }
+
+    function selectCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('#categoryTabs .chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.cat === cat);
+      });
+      renderFonts();
+    }
+
+    async function toggleFavorite(id) {
+      const f = allFonts.find(x => x.id === id);
+      if (!f) return;
+      f.favorite = !f.favorite;
+      renderFonts();
+      await fetch('/api/font-meta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, favorite: f.favorite })
+      });
+      showToast(f.favorite ? `★ Đã thêm "${f.displayName}" vào Yêu thích` : `Đã bỏ Yêu thích "${f.displayName}"`);
+    }
+
+    async function toggleHidden(id) {
+      const f = allFonts.find(x => x.id === id);
+      if (!f) return;
+      f.hidden = !f.hidden;
+      renderFonts();
+      await fetch('/api/font-meta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, hidden: f.hidden })
+      });
+      showToast(f.hidden ? `👁️ Đã ẩn "${f.displayName}"` : `Đã hiện lại "${f.displayName}"`);
+    }
+
+    async function cycleCategory(id) {
+      const f = allFonts.find(x => x.id === id);
+      if (!f) return;
+      const cur = (f.tags && f.tags[0]) || f.autoCategory || CATEGORIES[0];
+      const nextIdx = (CATEGORIES.indexOf(cur) + 1) % CATEGORIES.length;
+      const nextCat = CATEGORIES[nextIdx];
+      f.tags = [nextCat];
+      renderFonts();
+      await fetch('/api/font-meta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, tags: f.tags })
+      });
+      showToast(`🏷️ Đã chuyển "${f.displayName}" sang nhóm: ${nextCat}`);
+    }
+
+    function toggleCardSelection(id) {
+      const nextState = !selectedForExport.has(id);
+      toggleSelectForExport(id, nextState);
+    }
+
+    function toggleSelectForExport(id, checked) {
+      if (checked) selectedForExport.add(id);
+      else selectedForExport.delete(id);
+      const card = document.getElementById(`card_${id}`);
+      if (card) {
+        card.classList.toggle('selected-for-export', checked);
+        const cb = card.querySelector('.select-check input[type="checkbox"]');
+        if (cb) cb.checked = checked;
+        const span = card.querySelector('.select-check span');
+        if (span) span.textContent = checked ? '✓ Đã chọn' : '+ Chọn';
+      }
+      document.getElementById('countSelected').textContent = selectedForExport.size;
+      document.getElementById('bottomSelectedCount').textContent = selectedForExport.size;
+      updateSelectAllButtonLabel();
+    }
+
+    function updateSelectAllButtonLabel() {
+      const btn = document.getElementById('btnToggleSelectAll');
+      if (!btn) return;
+      if (selectedForExport.size > 0) {
+        btn.innerHTML = `✖ Bỏ chọn tất cả (${selectedForExport.size})`;
+      } else {
+        btn.innerHTML = `☑️ Chọn tất cả (${filteredFonts.length})`;
+      }
+    }
+
+    function toggleSelectAllVisible() {
+      if (selectedForExport.size > 0) {
+        selectedForExport.clear();
+        renderFonts();
+        showToast('Đã bỏ chọn tất cả phông chữ');
+      } else {
+        filteredFonts.forEach(f => selectedForExport.add(f.id));
+        renderFonts();
+        showToast(`✅ Đã chọn tất cả ${filteredFonts.length} phông chữ đang hiển thị`);
+      }
+    }
+
+    // Install, Delete, and Export (.ZIP) Font Management Functions
+    function pickAndInstallFontsFromDisk() {
+      const inp = document.getElementById('fileUploadInput');
+      if (inp) {
+        inp.value = '';
+        inp.click();
+      }
+    }
+
+    async function handleInstallButtonClick() {
+      // Nếu người dùng đang chọn các font chưa cài trên màn hình -> cài các font đó
+      // Ngược lại -> mở ngay cửa sổ chọn file .ZIP hoặc file .TTF/.OTF từ máy để cài
+      const selectedUninstalled = allFonts.filter(f => selectedForExport.has(f.id) && !f.isInstalled);
+      if (selectedUninstalled.length > 0) {
+        await installFonts(selectedUninstalled.map(f => f.id));
+      } else {
+        pickAndInstallFontsFromDisk();
+      }
+    }
+
+    async function installFonts(ids) {
+      if (!ids || ids.length === 0) {
+        await pickAndInstallFontsFromDisk();
+        return;
+      }
+      showToast(`⏳ Đang cài ${ids.length} font vào hệ thống Windows...`);
+      const res = await fetch('/api/install-fonts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        if (data.installedCount > 0) {
+          showToast(`✅ Đã cài thành công ${data.installedCount} font vào Windows!`);
+        } else {
+          showToast(`ℹ️ Các font đã chọn đều đã được cài sẵn trong Windows!`);
+        }
+        await fetchFonts();
+      }
+    }
+
+    async function exportSelectedFontsZip() {
+      const ids = selectedForExport.size > 0
+        ? Array.from(selectedForExport)
+        : [];
+      if (ids.length === 0) {
+        showToast('⚠️ Hãy tích chọn ít nhất 1 font để nén xuất file .ZIP nhé!');
+        return;
+      }
+      showToast(`⏳ Đang nén ${ids.length} file font thành gói .ZIP...`);
+      try {
+        const res = await fetch('/api/export-zip', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids })
+        });
+        if (!res.ok) {
+          showToast('⚠️ Không thể tạo file ZIP');
+          return;
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Studio-Fonts-Selected-${ids.length}-fonts.zip`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        showToast(`📦 Đã tải xuống gói .ZIP gồm ${ids.length} phông chữ!`);
+      } catch (e) {
+        showToast('⚠️ Lỗi khi xuất file ZIP');
+      }
+    }
+
+    async function deleteSingleFont(id, name) {
+      if (!confirm(`Bạn có chắc muốn xoá/gỡ phông chữ "${name}" không?\n(File gốc vẫn được lưu dự phòng trong mục Thùng rác ./trash_fonts)`)) {
+        return;
+      }
+      await performDeleteFonts([id]);
+    }
+
+    async function deleteSelectedFonts() {
+      if (selectedForExport.size === 0) {
+        showToast('⚠️ Hãy tích chọn các font muốn xoá trước nhé!');
+        return;
+      }
+      const count = selectedForExport.size;
+      if (!confirm(`Bạn có chắc muốn xoá / gỡ cài đặt ${count} phông chữ đã chọn không?\n(File gốc vẫn được lưu an toàn trong Thùng rác ./trash_fonts để khôi phục khi cần)`)) {
+        return;
+      }
+      await performDeleteFonts(Array.from(selectedForExport));
+    }
+
+    async function performDeleteFonts(ids) {
+      showToast(`⏳ Đang xoá ${ids.length} phông chữ...`);
+      const res = await fetch('/api/delete-fonts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        ids.forEach(id => selectedForExport.delete(id));
+        await fetchFonts();
+        showToast(`🗑️ Đã xoá ${data.deletedCount} font (đã lưu bản sao vào Thùng rác ./trash_fonts)`);
+      }
+    }
+
+    async function openTrashFolder() {
+      await fetch('/api/open-trash-folder', { method: 'POST' });
+    }
+
+    function selectAllVisible() {
+      filteredFonts.forEach(f => selectedForExport.add(f.id));
+      renderFonts();
+      showToast(`✅ Đã chọn ${filteredFonts.length} mẫu đang hiển thị`);
+    }
+
+    function clearSelected() {
+      selectedForExport.clear();
+      renderFonts();
+      showToast('Đã bỏ chọn tất cả mẫu');
+    }
+
+    function copyFontName(name) {
+      navigator.clipboard.writeText(name);
+      showToast(`📋 Đã copy tên font: "${name}" (Dán vào Photoshop/Corel/AI)`);
+    }
+
+    async function toggleSetting(key, value) {
+      appSettings[key] = value;
+      await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [key]: value })
+      });
+      if (key === 'includeWindowsFonts') {
+        await fetchFonts();
+      } else {
+        renderFonts();
+      }
+    }
+
+    // Export Image / Zalo Sheet Generator
+    async function openExportModal() {
+      const listToExport = getExportFontList();
+      if (listToExport.length === 0) {
+        showToast('⚠️ Không có phông chữ nào để xuất!');
+        return;
+      }
+      document.getElementById('exportModal').classList.add('open');
+      showToast('⏳ Đang tạo bảng mẫu nét cao...');
+      // Ensure all fonts to export are loaded in document.fonts
+      await Promise.all(listToExport.map(f => ensureFontLoaded(f.id)));
+      await document.fonts.ready;
+      generateExportCanvas();
+    }
+
+    function closeExportModal() {
+      document.getElementById('exportModal').classList.remove('open');
+    }
+
+    function getExportFontList() {
+      if (selectedForExport.size > 0) {
+        return allFonts.filter(f => selectedForExport.has(f.id));
+      }
+      return filteredFonts.slice(0, 60);
+    }
+
+    function generateExportCanvas() {
+      const list = getExportFontList();
+      const cols = parseInt(document.getElementById('exportCols').value, 10) || 3;
+      const showMode = document.getElementById('exportShowFontName').value;
+      const title = document.getElementById('exportTitleInput').value || 'BẢNG MẪU PHÔNG CHỮ';
+      const coupleName = document.getElementById('coupleNameInput').value || 'Hoàng Điệp & Trịnh Hướng';
+
+      const canvas = document.getElementById('exportCanvas');
+      const ctx = canvas.getContext('2d');
+
+      const cellW = cols === 2 ? 620 : (cols === 3 ? 450 : 360);
+      const cellH = 145;
+      const pad = 28;
+      const gap = 16;
+      const headerH = 115;
+      const rows = Math.ceil(list.length / cols);
+
+      const width = pad * 2 + cols * cellW + (cols - 1) * gap;
+      const height = headerH + rows * cellH + (rows - 1) * gap + pad + 40;
+
+      // Độ nét: layout gốc tính ở 96 DPI, nhân hệ số để ra 300-500 DPI
+      const wantDpi = parseInt(document.getElementById('exportDpi').value, 10) || 300;
+      let scale = wantDpi / 96;
+      // Giới hạn kích thước canvas của trình duyệt (~16000px mỗi cạnh, ~250 triệu điểm ảnh)
+      const MAX_SIDE = 16000, MAX_AREA = 250000000;
+      scale = Math.min(scale, MAX_SIDE / width, MAX_SIDE / height, Math.sqrt(MAX_AREA / (width * height)));
+      const realDpi = Math.round(scale * 96);
+      canvas.width = Math.round(width * scale);
+      canvas.height = Math.round(height * scale);
+      canvas.style.width = width + 'px';
+      canvas.dataset.dpi = realDpi;
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
+      ctx.imageSmoothingQuality = 'high';
+      const info = document.getElementById('exportSizeInfo');
+      info.textContent = `${canvas.width} × ${canvas.height} px • ${realDpi} DPI` +
+        (realDpi < wantDpi ? ` (quá nhiều mẫu, đã tự giảm — nên chọn ít mẫu hơn)` : '');
+      info.style.color = realDpi < wantDpi ? '#dc2626' : '';
+      // Background
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(0, 0, width, height);
+
+      // Header Banner
+      ctx.fillStyle = '#9f1239';
+      ctx.fillRect(0, 0, width, 92);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 26px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${title} — ${coupleName.toUpperCase()}`, width / 2, 42);
+
+      ctx.fillStyle = '#ffe4e6';
+      ctx.font = '16px "Segoe UI", sans-serif';
+      ctx.fillText(`Vui lòng chọn Mã số mẫu chữ ưng ý (Ví dụ: #01, #05...)`, width / 2, 72);
+
+      // Draw each font box
+      list.forEach((f, idx) => {
+        const r = Math.floor(idx / cols);
+        const c = idx % cols;
+        const x = pad + c * (cellW + gap);
+        const y = headerH + r * (cellH + gap);
+
+        // Card Box
+        ctx.fillStyle = previewBg;
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 2;
+        roundRect(ctx, x, y, cellW, cellH, 10, true, true);
+
+        // Number Badge (#01)
+        const codeStr = `#${String(idx + 1).padStart(2, '0')}`;
+        ctx.fillStyle = '#be123c';
+        roundRect(ctx, x + 12, y + 10, 48, 26, 6, true, false);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px "Segoe UI", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(codeStr, x + 36, y + 28);
+
+        // Optional Font Name
+        if (showMode === 'code_and_name') {
+          ctx.fillStyle = previewBg === '#18181b' ? '#94a3b8' : '#64748b';
+          ctx.font = '600 13px "Segoe UI", sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText(f.displayName.slice(0, 38), x + 68, y + 28);
+        }
+
+        // Main Text in that Font
+        const family = `Font_${f.id}`;
+        const textToDraw = getPreviewTextForFont(f);
+        ctx.fillStyle = previewColor;
+        ctx.textAlign = 'center';
+
+        // Auto fit font size inside cellW - 32
+        let targetFontSize = cols === 2 ? 44 : (cols === 3 ? 36 : 30);
+        ctx.font = `${targetFontSize}px "${family}", sans-serif`;
+        while (ctx.measureText(textToDraw).width > cellW - 36 && targetFontSize > 18) {
+          targetFontSize -= 2;
+          ctx.font = `${targetFontSize}px "${family}", sans-serif`;
+        }
+
+        const centerY = y + cellH / 2 + 18;
+        ctx.fillText(textToDraw, x + cellW / 2, centerY);
+      });
+
+      // Footer
+      ctx.fillStyle = '#64748b';
+      ctx.font = '13px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Tổng số: ${list.length} mẫu phông chữ • Tạo bởi STUDIO FONT MANAGER`, width / 2, height - 14);
+    }
+
+    function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+
+    function copyCanvasToClipboard() {
+      const canvas = document.getElementById('exportCanvas');
+      canvas.toBlob(async (blob) => {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          showToast('✅ Đã Copy ảnh! Bạn mở Zalo bấm Ctrl + V để gửi cho Dâu Rể ngay nhé!');
+        } catch (err) {
+          showToast('⚠️ Trình duyệt không hỗ trợ copy trực tiếp, hãy bấm "Tải File Ảnh PNG" nhé');
+        }
+      }, 'image/png');
+    }
+
+    function downloadCanvasAsPng() {
+      const canvas = document.getElementById('exportCanvas');
+      const couple = (document.getElementById('coupleNameInput').value || 'Dau-Re')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
+        .replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const dpi = parseInt(canvas.dataset.dpi, 10) || 300;
+      showToast('⏳ Đang tạo file ảnh nét cao...');
+      canvas.toBlob(async (blob) => {
+        const withDpi = await setPngDpi(blob, dpi);
+        const url = URL.createObjectURL(withDpi);
+        const link = document.createElement('a');
+        link.download = `Bang-Mau-Font-Cuoi-${couple}-${dpi}dpi.png`;
+        link.href = url;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        showToast(`💾 Đã tải ảnh ${canvas.width}×${canvas.height}px • ${dpi} DPI`);
+      }, 'image/png');
+    }
+
+    // Ghi thông tin DPI (chunk pHYs) vào file PNG để Photoshop / máy in nhận đúng DPI
+    async function setPngDpi(blob, dpi) {
+      const buf = new Uint8Array(await blob.arrayBuffer());
+      const ppm = Math.round(dpi / 0.0254);
+      const chunk = new Uint8Array(21);
+      const dv = new DataView(chunk.buffer);
+      dv.setUint32(0, 9);
+      chunk.set([0x70, 0x48, 0x59, 0x73], 4); // 'pHYs'
+      dv.setUint32(8, ppm);
+      dv.setUint32(12, ppm);
+      chunk[16] = 1; // đơn vị: mét
+      dv.setUint32(17, crc32(chunk.subarray(4, 17)));
+      const insertAt = 33; // sau chữ ký PNG (8) + IHDR (25)
+      const out = new Uint8Array(buf.length + chunk.length);
+      out.set(buf.subarray(0, insertAt), 0);
+      out.set(chunk, insertAt);
+      out.set(buf.subarray(insertAt), insertAt + chunk.length);
+      return new Blob([out], { type: 'image/png' });
+    }
+
+    let _crcTable = null;
+    function crc32(bytes) {
+      if (!_crcTable) {
+        _crcTable = new Uint32Array(256);
+        for (let n = 0; n < 256; n++) {
+          let c = n;
+          for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+          _crcTable[n] = c >>> 0;
+        }
+      }
+      let crc = 0xFFFFFFFF;
+      for (let i = 0; i < bytes.length; i++) crc = _crcTable[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+      return (crc ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    // Folder & File Management
+    function openSettingsModal() {
+      document.getElementById('settingsModal').classList.add('open');
+    }
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('open');
+    }
+
+    async function openFolderPicker() {
+      showToast('📂 Đang mở hộp thoại chọn thư mục Font...');
+      const res = await fetch('/api/pick-folder', { method: 'POST' });
+      const data = await res.json();
+      if (data.ok && data.folderPath) {
+        showToast(`✅ Đã nạp thêm thư mục: ${data.folderPath}`);
+        await fetchFonts();
+      }
+    }
+
+    async function openAppFontsFolder() {
+      await fetch('/api/open-fonts-folder', { method: 'POST' });
+    }
+
+    function renderCustomFolders() {
+      const box = document.getElementById('customFoldersList');
+      const folders = appSettings.customFolders || [];
+      if (folders.length === 0) {
+        box.innerHTML = `<div style="color: var(--muted); font-style: italic;">Chưa có thư mục ngoài nào được thêm. (Mặc định luôn quét thư mục ./fonts của phần mềm)</div>`;
+        return;
+      }
+      box.innerHTML = folders.map((folder, idx) => `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:8px 12px; border-radius:6px; border:1px solid var(--border);">
+          <span style="word-break:break-all;">📁 ${escapeHtml(folder)}</span>
+          <button class="btn btn-outline btn-sm" onclick="removeCustomFolder(${idx})">Xóa</button>
+        </div>
+      `).join('');
+    }
+
+    async function removeCustomFolder(idx) {
+      const folders = (appSettings.customFolders || []).filter((_, i) => i !== idx);
+      await toggleSetting('customFolders', folders);
+      await fetchFonts();
+    }
+
+    async function handleUploadFiles(fileList) {
+      if (!fileList || fileList.length === 0) return;
+      showToast(`⏳ Đang giải nén & cài đặt từ ${fileList.length} file đã chọn...`);
+      const filesPayload = [];
+      for (const file of fileList) {
+        const base64 = await fileToBase64(file);
+        filesPayload.push({ name: file.name, dataBase64: base64 });
+      }
+      const res = await fetch('/api/upload-fonts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ files: filesPayload })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        if (data.installedCount > 0) {
+          showToast(`✅ Đã giải nén & cài thành công ${data.installedCount} font mới vào Windows! (Đã có sẵn: ${data.alreadyCount || 0})`);
+        } else if (data.alreadyCount > 0) {
+          showToast(`ℹ️ Toàn bộ ${data.alreadyCount} font trong file bạn chọn đều đã được cài sẵn trong máy!`);
+        } else {
+          showToast(`⚠️ Không tìm thấy file .ttf hoặc .otf hợp lệ trong file đã chọn.`);
+        }
+        await fetchFonts();
+      }
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const res = reader.result || '';
+          resolve(res.split(',')[1] || '');
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+    function escapeJs(str) {
+      return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    }
+
+    // Initialize
+    fetchFonts();
+  </script>
+</body>
+</html>
